@@ -1,0 +1,31 @@
+# Create your views here.
+from formpost.models import * # the app which will post data 
+
+from django.views.generic.simple import direct_to_template
+from django.http import *
+from django.shortcuts import *
+from django.template import RequestContext
+import datetime
+import cgi 
+from formpost.forms import PostForm 
+
+
+def feedline(request):
+	
+	feedriver = uPost.objects.all().order_by('-pub_date')
+
+	return direct_to_template(request, "formpost/list.html/",{'object_list':feedriver})
+
+
+def feedPost(request):
+
+	form = PostForm(request.POST or None)
+	if form.is_valid():
+	    post = form.save(commit=False)
+	    post.pub_date = datetime.datetime.today()
+	    post.save()
+
+	    return HttpResponseRedirect("/feedline")
+	return direct_to_template(request,'formpost/list.html',{'form':form}, context_instance=RequestContext(request))
+
+

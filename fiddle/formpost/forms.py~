@@ -1,0 +1,11 @@
+from django import forms 
+
+from formpost.models import * 
+
+class PostForm(ModelForm):
+	
+	class Meta:
+	  model = uPost
+	  exclude = ['pub_date']
+
+
